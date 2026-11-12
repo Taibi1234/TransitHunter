@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "transithunter"
+version = "0.1.0"
+description = "Blind transit-candidate searches in real Kepler and TESS light curves"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = {text = "MIT"}
+authors = [
+    {name = "Taibi"}
+]
+dependencies = [
+    "astropy>=6,<8",
+    "astroquery>=0.4.8,<1",
+    "lightkurve>=2.5,<3",
+    "matplotlib>=3.8,<4",
+    "numpy>=1.26,<3"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<9"
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
