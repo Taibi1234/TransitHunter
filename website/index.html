@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="TransitHunter is an open-source Python pipeline for blind transit-candidate searches in real Kepler light curves, with conservative vetting and reproducible validation.">
+  <meta name="theme-color" content="#11110f">
+  <meta property="og:title" content="TransitHunter — Read the light. Test the signal.">
+  <meta property="og:description" content="Blind recovery of Kepler-10 b, transparent vetting, and a bounded injection/recovery benchmark.">
+  <meta property="og:type" content="website">
+  <title>TransitHunter — Blind transit-candidate search</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./src/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to research</a>
+
+  <header class="site-header" data-header>
+    <div class="shell header-inner">
+      <a class="wordmark" href="#top" aria-label="TransitHunter home">
+        <svg class="wordmark-mark" viewBox="0 0 36 36" aria-hidden="true">
+          <circle cx="18" cy="18" r="12.5"></circle>
+          <path d="M2 18h9m14 0h9M18 2v5m0 22v5"></path>
+          <circle class="wordmark-dot" cx="24.5" cy="12.5" r="2.5"></circle>
+        </svg>
+        <span>TRANSIT<span>/</span>HUNTER</span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation" data-menu-toggle>
+        <span></span><span></span>
+      </button>
+
+      <nav class="primary-nav" id="primary-nav" aria-label="Primary navigation" data-nav>
+        <a href="#result">Result</a>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#vetting">Vetting</a>
+        <a href="#validation">Validation</a>
+      </nav>
+
+      <a class="header-repo" href="https://github.com/Taibi1234/TransitHunter" target="_blank" rel="noopener noreferrer">
+        <span>GitHub</span>
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 15 15 5M7 5h8v8"></path></svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="shell hero-layout">
+        <div class="hero-copy">
+          <p class="eyebrow reveal">Open-source research software <span>v1.0.0</span></p>
+          <h1 id="hero-title" class="reveal">Read the light.<br><span>Test the signal.</span></h1>
+          <p class="hero-intro reveal">A reproducible Python pipeline for blind transit-candidate searches in real Kepler light curves—from archive acquisition to screening, catalogue identification, and controlled validation.</p>
+          <div class="hero-actions reveal">
+            <a class="button button-primary" href="#result">Explore the recovery <span aria-hidden="true">↓</span></a>
+            <a class="text-link" href="https://github.com/Taibi1234/TransitHunter" target="_blank" rel="noopener noreferrer">View source <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="hero-meta reveal" aria-label="Project properties">
+            <span>Python 3.11–3.13</span>
+            <span>20 automated tests</span>
+            <span>MIT license</span>
+          </div>
+        </div>
+
+        <div class="observation reveal" aria-label="Schematic light curve showing periodic transit-like dips">
+          <div class="observation-head">
+            <div>
+              <span class="micro-label">Blind recovery / 01</span>
+              <strong>KIC 11904151</strong>
+            </div>
+            <span class="live-tag"><i></i> Kepler Q3</span>
+          </div>
+          <div class="chart-wrap">
+            <div class="chart-y-label">NORMALIZED FLUX</div>
+            <svg id="hero-chart" viewBox="0 0 720 340" role="img" aria-labelledby="chart-title chart-desc">
+              <title id="chart-title">Schematic periodic transit light curve</title>
+              <desc id="chart-desc">An amber line with repeated narrow downward dips against a dark technical grid. This is a schematic, not a scientific data output.</desc>
+              <g class="chart-grid-lines">
+                <path d="M44 40H696M44 110H696M44 180H696M44 250H696M44 320H696"></path>
+                <path d="M44 40V320M207 40V320M370 40V320M533 40V320M696 40V320"></path>
+              </g>
+              <path class="chart-baseline" d="M44 172H696"></path>
+              <path id="light-curve-path" class="light-curve-path" d=""></path>
+              <g id="light-curve-points" class="light-curve-points"></g>
+              <g class="chart-axis-labels">
+                <text x="44" y="337">0</text><text x="200" y="337">1</text><text x="363" y="337">2</text><text x="526" y="337">3</text><text x="680" y="337">4 d</text>
+              </g>
+            </svg>
+            <div class="transit-marker"><span></span> periodic flux decrement</div>
+          </div>
+          <div class="observation-data">
+            <div><span>Recovered period</span><strong>0.837429 <small>d</small></strong></div>
+            <div><span>Transit depth</span><strong>151.33 <small>ppm</small></strong></div>
+            <div><span>Duration</span><strong>1.92 <small>h</small></strong></div>
+          </div>
+          <p class="schematic-note">Schematic trace · not a scientific output</p>
+        </div>
+      </div>
+      <div class="shell hero-foot">
+        <p><span class="status-dot"></span> Validated against a known signal—not presented as a new discovery.</p>
+        <a href="#pipeline">Acquisition → vetting → catalogue</a>
+      </div>
+    </section>
+
+    <section class="section result-section" id="result" aria-labelledby="result-title">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <p class="section-index">01 / Blind recovery</p>
+          <div>
+            <h2 id="result-title">A known planet,<br>found without its ephemeris.</h2>
+            <p>TransitHunter searched Kepler Quarter 3 without supplying a published period or epoch. The strongest signal was then matched independently to Kepler-10 b / K00072.01.</p>
+          </div>
+        </div>
+
+        <div class="result-ledger reveal">
+          <div class="ledger-intro">
+            <span class="micro-label">Validation target</span>
+            <h3>Kepler-10</h3>
+            <p>KIC 11904151 · Quarter 3<br>MAST archive · long cadence</p>
+            <span class="catalogue-badge"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 8 3 3 7-7"></path></svg> Catalogue identified</span>
+          </div>
+          <div class="period-comparison">
+            <div class="period-row">
+              <span>Blind BLS period</span>
+              <strong>0.8374290408 <small>d</small></strong>
+              <em>Search output</em>
+            </div>
+            <div class="period-row">
+              <span>NASA KOI period</span>
+              <strong>0.837491225 <small>d</small></strong>
+              <em>Catalogue comparison</em>
+            </div>
+            <div class="period-difference">
+              <span>Absolute difference</span>
+              <strong>≈ 5.37 seconds</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="sample-ledger reveal" aria-label="Data processing counts">
+          <div><span>Raw cadences</span><strong>4,228</strong></div>
+          <div><span>After preprocessing</span><strong>3,633</strong></div>
+          <div><span>Observing segments</span><strong>4</strong></div>
+          <div><span>Period-grid evaluations</span><strong>378,377</strong></div>
+        </div>
+
+        <figure class="science-figure reveal">
+          <div class="figure-topline">
+            <figcaption>
+              <span class="micro-label">Real pipeline output / Figure 01</span>
+              <strong>Blind BLS periodogram and phase-folded recovery</strong>
+            </figcaption>
+            <button class="figure-expand" type="button" data-figure="bls" aria-label="Expand blind BLS diagnostic figure">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 3H3v4m10-4h4v4M3 13v4h4m10-4v4h-4"></path></svg>
+              Expand
+            </button>
+          </div>
+          <div class="figure-paper">
+            <img src="./assets/kepler10-bls.png" alt="BLS periodogram with a peak at 0.83742904 days and phase-folded light-curve panels showing the recovered transit-like dip." width="2080" height="1280" loading="lazy">
+          </div>
+          <p class="figure-note">The figure’s “unvetted” label describes the BLS stage before subsequent screening and catalogue identification. This is a known-planet re-detection benchmark.</p>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section pipeline-section" id="pipeline" aria-labelledby="pipeline-title">
+      <div class="shell">
+        <div class="section-heading compact reveal">
+          <p class="section-index">02 / Method</p>
+          <div>
+            <h2 id="pipeline-title">A search built to<br>preserve the dip.</h2>
+            <p>Each stage writes inspectable outputs. Negative deviations are protected—not smoothed away—and the search receives no published planetary ephemeris.</p>
+          </div>
+        </div>
+
+        <div class="pipeline-list">
+          <article class="pipeline-step reveal">
+            <span class="step-number">01</span>
+            <div class="step-title"><h3>Acquire</h3><span>MAST / Lightkurve</span></div>
+            <p>Download one explicit archive product and export time, flux, uncertainty, and original quality flags with query-specific caching.</p>
+            <span class="step-detail">Raw provenance retained</span>
+          </article>
+          <article class="pipeline-step reveal">
+            <span class="step-number">02</span>
+            <div class="step-title"><h3>Prepare</h3><span>Conservative filtering</span></div>
+            <p>Retain quality-zero cadences, remove invalid measurements, median-normalize, and clip extreme positive outliers only.</p>
+            <span class="step-detail">594 bad-quality rows removed</span>
+          </article>
+          <article class="pipeline-step reveal">
+            <span class="step-number">03</span>
+            <div class="step-title"><h3>Detrend</h3><span>Gap-aware rolling median</span></div>
+            <p>Estimate independent baselines across observing gaps. A fixed mask protects negative deviations from the final baseline fit.</p>
+            <span class="step-detail">142 points protected · 0 removed</span>
+          </article>
+          <article class="pipeline-step reveal">
+            <span class="step-number">04</span>
+            <div class="step-title"><h3>Search</h3><span>Astropy BoxLeastSquares</span></div>
+            <p>Search 0.5–10 day periods over four trial durations, requiring at least three transits and returning the strongest periodic box signal.</p>
+            <span class="step-detail">Period + duration + epoch</span>
+          </article>
+          <article class="pipeline-step reveal">
+            <span class="step-number">05</span>
+            <div class="step-title"><h3>Screen</h3><span>Preliminary vetting</span></div>
+            <p>Measure individual primary events, compare odd and even depths, and inspect phase 0.5 for a possible secondary eclipse.</p>
+            <span class="step-detail">Screening ≠ confirmation</span>
+          </article>
+          <article class="pipeline-step reveal">
+            <span class="step-number">06</span>
+            <div class="step-title"><h3>Identify</h3><span>NASA Exoplanet Archive</span></div>
+            <p>Use the exact KIC identifier to cross-match cumulative KOI and confirmed-planet tables before describing the signal.</p>
+            <span class="step-detail">Known signals stay known</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section vetting-section" id="vetting" aria-labelledby="vetting-title">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <p class="section-index">03 / Screening</p>
+          <div>
+            <h2 id="vetting-title">The result includes<br>what did not pass cleanly.</h2>
+            <p>The recovered signal was catalogue-identified as Kepler-10 b, but the automated secondary check still triggered a false-positive review flag.</p>
+          </div>
+        </div>
+
+        <div class="vetting-layout">
+          <div class="vetting-status reveal">
+            <span class="micro-label">Automated screening status</span>
+            <div class="flag-symbol" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 28V4m1 2h15l-3 5 3 5H8"></path></svg></div>
+            <h3>Flagged for<br>false-positive review</h3>
+            <p>A marginal 7.69 ppm phase-0.5 measurement crossed the formal secondary threshold. Correlated noise and residual systematics prevent a physical classification from this check alone.</p>
+            <span class="status-code">significant_secondary_eclipse</span>
+          </div>
+
+          <div class="vetting-measurements reveal">
+            <div class="measurement-head"><span>Test</span><span>Measurement</span><span>Interpretation</span></div>
+            <div class="measurement-row">
+              <strong>Odd / even depth</strong>
+              <span>−1.878 σ</span>
+              <p>Below the 3σ screening threshold</p>
+            </div>
+            <div class="measurement-row">
+              <strong>Odd transit depth</strong>
+              <span>145.68 ppm</span>
+              <p>48 measurable events</p>
+            </div>
+            <div class="measurement-row">
+              <strong>Even transit depth</strong>
+              <span>155.08 ppm</span>
+              <p>50 measurable events</p>
+            </div>
+            <div class="measurement-row flagged">
+              <strong>Secondary depth</strong>
+              <span>7.69 ppm</span>
+              <p>Formal SNR 3.126 · flagged</p>
+            </div>
+            <p class="measurement-note">Neither a passed check nor a flag independently establishes the astrophysical nature of a signal.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section validation-section" id="validation" aria-labelledby="validation-title">
+      <div class="shell">
+        <div class="section-heading compact reveal">
+          <p class="section-index">04 / Bounded validation</p>
+          <div>
+            <h2 id="validation-title">Eight recoveries.<br>One essential warning.</h2>
+            <p>Nine deterministic box signals were injected after masking the strongest known signal. A zero-depth control tested what the search finds when nothing is injected.</p>
+          </div>
+        </div>
+
+        <div class="injection-summary reveal">
+          <div class="recovery-score">
+            <span class="micro-label">Injection / recovery</span>
+            <strong><span>8</span> / 9</strong>
+            <p>trials recovered under the stated period, epoch, SNR, and control-power criteria</p>
+            <div class="trial-dots" aria-label="Eight recovered trials and one unrecovered trial">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="missed"></i>
+            </div>
+          </div>
+          <div class="recovery-table" role="table" aria-label="Injection recovery by depth">
+            <div role="row" class="recovery-table-head"><span role="columnheader">Injected depth</span><span role="columnheader">Recovered</span><span role="columnheader">Trials</span></div>
+            <div role="row"><strong role="cell">100 ppm</strong><span role="cell">2 / 3</span><span role="cell" class="mini-trials"><i></i><i></i><i class="missed"></i></span></div>
+            <div role="row"><strong role="cell">250 ppm</strong><span role="cell">3 / 3</span><span role="cell" class="mini-trials"><i></i><i></i><i></i></span></div>
+            <div role="row"><strong role="cell">500 ppm</strong><span role="cell">3 / 3</span><span role="cell" class="mini-trials"><i></i><i></i><i></i></span></div>
+          </div>
+          <div class="control-warning">
+            <span class="micro-label">Zero-depth control</span>
+            <strong>141 <small>ppm</small></strong>
+            <p>Residual signal at 9.07 days<br>Formal depth SNR 25</p>
+            <span class="warning-label">High formal SNR is not sufficient evidence.</span>
+          </div>
+        </div>
+
+        <figure class="science-figure reveal">
+          <div class="figure-topline">
+            <figcaption>
+              <span class="micro-label">Real pipeline output / Figure 02</span>
+              <strong>Limited one-quarter injection/recovery benchmark</strong>
+            </figcaption>
+            <button class="figure-expand" type="button" data-figure="injection" aria-label="Expand injection and recovery benchmark figure">
+              <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 3H3v4m10-4h4v4M3 13v4h4m10-4v4h-4"></path></svg>
+              Expand
+            </button>
+          </div>
+          <div class="figure-paper injection-paper">
+            <img src="./assets/injection-recovery.png" alt="Scatter plot of nine injected signals at 100, 250, and 500 ppm. Eight are marked recovered; the 100 ppm injection at 4.1 days is not recovered." width="1600" height="960" loading="eager">
+          </div>
+          <p class="figure-note">The missed 100 ppm, 4.1-day injection did not exceed the zero-depth control. These nine trials are not a general detection-completeness estimate.</p>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section limits-section" id="limits" aria-labelledby="limits-title">
+      <div class="shell limits-layout">
+        <div class="limits-heading reveal">
+          <p class="section-index">05 / Research integrity</p>
+          <h2 id="limits-title">What the software<br>does not claim.</h2>
+          <p>TransitHunter produces transit-like signals and planet candidates. Scientific interpretation remains a separate, evidence-driven process.</p>
+        </div>
+        <ol class="limits-list">
+          <li class="reveal"><span>01</span><div><h3>No catalogue match is not a discovery.</h3><p>Archive completeness, naming, and matching tolerances matter. New discoveries require independent scrutiny and follow-up.</p></div></li>
+          <li class="reveal"><span>02</span><div><h3>Formal significance is not confirmation.</h3><p>BLS uncertainties do not fully capture correlated stellar variability, instrumental systematics, or residual detrending structure.</p></div></li>
+          <li class="reveal"><span>03</span><div><h3>Nine trials are not a completeness map.</h3><p>The benchmark covers one target, one quarter, one implementation, and a small deterministic trial grid.</p></div></li>
+          <li class="reveal"><span>04</span><div><h3>Kepler-10 b was already known.</h3><p>This validation demonstrates blind recovery and honest identification—not a new planetary discovery.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section reproduce-section" id="reproduce" aria-labelledby="reproduce-title">
+      <div class="shell">
+        <div class="reproduce-panel reveal">
+          <div class="reproduce-copy">
+            <p class="section-index">06 / Reproduce</p>
+            <h2 id="reproduce-title">Inspect the code.<br>Run the evidence.</h2>
+            <p>Version 1.0.0 includes the complete Python package, 20 network-independent tests, validation documentation, diagnostic figures, and an end-to-end run manifest.</p>
+            <div class="reproduce-links">
+              <a class="button button-primary" href="https://github.com/Taibi1234/TransitHunter" target="_blank" rel="noopener noreferrer">Open repository <span aria-hidden="true">↗</span></a>
+              <a class="text-link" href="https://github.com/Taibi1234/TransitHunter/releases/tag/v1.0.0" target="_blank" rel="noopener noreferrer">Release v1.0.0 <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div class="command-block">
+            <div class="command-head">
+              <span>PowerShell · repository root</span>
+              <button type="button" data-copy-command aria-label="Copy the TransitHunter reproduction command">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="1"></rect><path d="M13 7V3H3v10h4"></path></svg>
+                <span data-copy-label>Copy</span>
+              </button>
+            </div>
+            <code id="run-command">.\.venv\Scripts\python.exe -m transithunter.pipeline "KIC 11904151" --mission Kepler --author Kepler --cadence long --quarter 3</code>
+            <div class="command-foot">
+              <span><i></i> Real archive access required</span>
+              <a href="https://github.com/Taibi1234/TransitHunter/blob/main/docs/VALIDATION.md" target="_blank" rel="noopener noreferrer">Full validation report ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-main">
+      <a class="wordmark footer-wordmark" href="#top" aria-label="Back to top">
+        <svg class="wordmark-mark" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="12.5"></circle><path d="M2 18h9m14 0h9M18 2v5m0 22v5"></path><circle class="wordmark-dot" cx="24.5" cy="12.5" r="2.5"></circle></svg>
+        <span>TRANSIT<span>/</span>HUNTER</span>
+      </a>
+      <p>Blind searches. Explicit uncertainty.<br>Reproducible research software.</p>
+      <div class="footer-links">
+        <a href="https://github.com/Taibi1234/TransitHunter" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+        <a href="https://github.com/Taibi1234/TransitHunter/blob/main/docs/VALIDATION.md" target="_blank" rel="noopener noreferrer">Validation ↗</a>
+        <a href="https://github.com/Taibi1234/TransitHunter/blob/main/LICENSE.txt" target="_blank" rel="noopener noreferrer">MIT license ↗</a>
+      </div>
+    </div>
+    <div class="shell footer-bottom"><span>Built with Python · Validated with real Kepler data</span><span>Research release / 2026</span></div>
+  </footer>
+
+  <dialog class="figure-dialog" data-figure-dialog aria-labelledby="dialog-caption">
+    <div class="dialog-bar">
+      <p id="dialog-caption">Scientific figure</p>
+      <button type="button" data-dialog-close aria-label="Close expanded figure">Close <span aria-hidden="true">×</span></button>
+    </div>
+    <div class="dialog-image-wrap"><img data-dialog-image src="./assets/kepler10-bls.png" alt=""></div>
+  </dialog>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
